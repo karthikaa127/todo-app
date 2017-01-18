@@ -1,7 +1,9 @@
-#Application : # todo-app
+#Application : todo-app
 
 **Author : Karthika. A
+
 Version : V1
+
 Framework used : HTML5, CSS3, Javascript, jQuery, JSON, AJAX, Restful services, NodeJS, ExpressJS**
 
 

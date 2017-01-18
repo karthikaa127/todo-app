@@ -8,15 +8,15 @@
     <link rel="stylesheet" href="/assets/css/styles.css" type="text/css">
   </head>
   <body>
-    <h1> Welcome to the node js To-Do application </h1>
+    <h1 class="brightness"> Welcome to the node js To-Do application </h1>
     <div id="todo-table">
       <form method="post" action="/todo">
         <input type="text" name="item" value="" placeholder="Add new item : " required>
         <button type="submit">Add Item</button>
       </form>
       <ul>
-        <% for(i=0;i<todos.items.length;i++) {%>
-          <li> <%= todos.items[i].item %> </li>
+        <% for(i=0;i<todos.length;i++) {%>
+          <li> <%= todos[i].item %> </li>
         <% } %>
       </ul>
     </div>

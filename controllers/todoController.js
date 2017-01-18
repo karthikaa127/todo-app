@@ -1,26 +1,42 @@
 var bodyParser = require('body-parser');
-var fs = require('fs');
-var data = require("../todo-list.json");
+var mongoose = require('mongoose');
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 
-module.exports = function(app) {
 
-  console.log(data.items.length);
-  //routing
+//connect to the database
+mongoose.connect('mongodb://test:test@ds117929.mlab.com:17929/todo-karthi')
+
+//creating a schema - blueprint
+var todoSchema = new mongoose.Schema({
+  item: String
+});
+//creating a model/collection
+var Todo = mongoose.model('Todo', todoSchema);
+
+module.exports = function(app) {
+  //routing based on service request
   app.get('/todo', function (req,res) {
-    res.render('todo', {todos: data});
+    //get data from mongoDB and pass it to view
+    Todo.find({}, function (err, data) {  // can pass a item from collection and a callback function
+      if(err) throw err;
+      res.render('todo', {todos: data});
+      console.log(data);
+    });
   });
   app.post('/todo', urlencodedParser, function (req,res) {
-    data.items.push(req.body);
-    fs.writeFile('./todo-list.json', JSON.stringify(data));
-    res.json(data);
+    //get data from view and add to mongoDB
+    var newItem = Todo(req.body).save(function (err, data) {
+      if(err) throw err;
+      res.json(data);
+    });
   });
   app.delete('/todo/:item', function (req,res) {
-    data.items = data.items.filter(function (todo) {
-      return todo.item.replace(/ /g, '-') !== req.params.item;
-    })
-    fs.writeFile('./todo-list.json', JSON.stringify(data));
-    res.json(data);
+    //delete selected item from mongoDB
+    console.log(req.params.item);
+    Todo.find({item: req.params.item.replace(/\-/g, " ")}).remove(function (err, data) {
+      if(err) throw console.error();
+      res.json(data);
+    });
   });
 };
 
